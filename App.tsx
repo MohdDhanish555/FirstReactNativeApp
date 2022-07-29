@@ -1,50 +1,44 @@
 import * as React from "react";
-import { Platform, Text, View } from "react-native";
+import { Platform, StyleSheet, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import Constants from "expo-constants";
-
-function HomeScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>Home Section!</Text>
-    </View>
-  );
-}
-
-function SettingsScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>Settings!</Text>
-    </View>
-  );
-}
-
-function MediaScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>Settings!</Text>
-    </View>
-  );
-}
+import CameraScreen from "./screens/CameraScreen";
+import ContactModal from "./components/ContactModal";
+import { AppProvider } from "./context/AppContext";
+import ContactsStackScreen from "./screens/ContactsStackScreen";
+import AlbumStackScreen from "./screens/AlbumStackScreen";
 
 const Tab = createMaterialTopTabNavigator();
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Tab.Navigator
-        // tabBarPosition="bottom"
-        screenOptions={{
-          tabBarStyle: {
-            marginTop: Platform.OS === "ios" ? 0 : Constants.statusBarHeight,
-          },
-        }}
-      >
-        <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="Settings" component={SettingsScreen} />
-        <Tab.Screen name="Media" component={MediaScreen} />
-      </Tab.Navigator>
-    </NavigationContainer>
+    <AppProvider>
+      <>
+        <ContactModal />
+
+        <View style={styles.header}>
+          <Text style={styles.headerText}>MY APP</Text>
+        </View>
+        <NavigationContainer>
+          <Tab.Navigator initialRouteName="Contacts">
+            <Tab.Screen name="Camera" component={CameraScreen} />
+            <Tab.Screen name="Contacts" component={ContactsStackScreen} />
+            <Tab.Screen name="Album" component={AlbumStackScreen} />
+          </Tab.Navigator>
+        </NavigationContainer>
+      </>
+    </AppProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  header: {
+    marginTop: Platform.OS === "ios" ? 0 : Constants.statusBarHeight,
+    padding: 9,
+  },
+  headerText: {
+    fontWeight: "bold",
+    fontSize: 20,
+  },
+});
